@@ -60,5 +60,6 @@ export default {
   // }
   build: {
     postcss: { preset: { stage: 0 } }
-  }
+  },
+  buildDir: "dist"
 };
