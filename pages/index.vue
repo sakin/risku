@@ -680,7 +680,7 @@
 
 <script>
 import Logo from "~/components/Logo.vue";
-
+// test
 export default {
   components: {
     Logo
