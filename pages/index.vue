@@ -694,10 +694,6 @@ export default {
   @apply min-h-screen flex justify-center items-center text-center mx-auto;
 }
 */
-body {
-  @apply .bg-black;
-}
-
 .map {
   @apply .relative;
   width: 1024px;
