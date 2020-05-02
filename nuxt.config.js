@@ -41,7 +41,33 @@ export default {
   modules: [
     // Doc: https://axios.nuxtjs.org/usage
     "@nuxtjs/axios",
-    "@nuxtjs/pwa"
+    "@nuxtjs/pwa",
+    [
+      "@nuxtjs/firebase",
+      {
+        config: {
+          apiKey: "AIzaSyBs1V_qQaA2-p048cC51badY9UPOR2stOg",
+          authDomain: "risku-68279.firebaseapp.com",
+          databaseURL: "https://risku-68279.firebaseio.com",
+          projectId: "risku-68279",
+          storageBucket: "risku-68279.appspot.com",
+          messagingSenderId: "730584144273",
+          appId: "1:730584144273:web:cdb43759efb010e0cd6230",
+          measurementId: "G-JNMKHT0ZEH"
+        },
+        services: {
+          auth: {
+            persistence: "local",
+            initialize: {
+              // onAuthStateChangedMutation: "user/SET_AUTH_USER",
+              onAuthStateChangedMutation: null,
+              onAuthStateChangedAction: "user/onAuthStateChangedAction"
+            },
+            ssr: false
+          }
+        }
+      }
+    ]
   ],
   /*
    ** Axios module configuration
