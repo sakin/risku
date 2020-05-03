@@ -30,14 +30,16 @@ export const mutations = {
 };
 
 export const actions = {
-  logout(ctx) {
+  async logout(ctx) {
     console.log("logout action");
     const { commit } = ctx;
+
+    await this.$fireAuth.signOut();
     commit(types.LOG_OUT);
   },
   onAuthStateChangedAction(ctx, { authUser, claims }) {
     const { commit } = ctx;
-    // console.log("on auth state changed action", authUser, claims);
+    console.log("on auth state changed action", authUser, claims);
     if (!authUser) {
       // claims = null
       // Perform logout operations
