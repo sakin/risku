@@ -59,6 +59,7 @@ export const actions = {
 export const getters = {
   loggedIn(state) {
     // console.log("logged in", state);
+    console.log('getter', !!state.uid, uid)
     return !!state.uid;
   }
   // get(state) {
