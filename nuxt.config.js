@@ -64,7 +64,8 @@ export default {
               onAuthStateChangedAction: "user/onAuthStateChangedAction"
             },
             ssr: false
-          }
+          }, 
+          firestore: true,
         }
       }
     ]

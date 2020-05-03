@@ -1,5 +1,9 @@
 <template>
   <div class="justify-center flex w-100 flex-col">
+    <div class="bg-white">
+      <p>count: {{count}}</p>
+      <a @click.prevent="increment" href="#" class="btn btn-primary">+</a>
+      </div>
     <div class="map">
       <img src="~assets/images/westeros.jpg" />
     </div>
@@ -13,10 +17,18 @@ export default {
   components: {
     Logo
   },
-  mounted() {
-    console.log(this.$fireAuth);
+  async mounted() {
+    // console.log(this.$fireAuth);
+    try {
+      await this.$store.dispatch('user/bindCountDocument')
+    } catch (e) {
+      console.error(e)
+    }
   },
   methods: {
+    async increment() {
+      await this.$store.dispatch('user/increment', parseInt(this.count) + 1) 
+    }
     // login() {
     //   // this.$root.emit("openLoginModal");
     //   console.log(this.$refs["login-modal"]);
@@ -25,6 +37,11 @@ export default {
     // closeModal() {
     //   console.log("close modal");
     // }
+  },
+  computed: {
+    count() {
+      return this.$store.getters["user/count"];
+    }
   }
 };
 </script>
