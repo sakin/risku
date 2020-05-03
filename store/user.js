@@ -18,6 +18,7 @@ export const mutations = {
   },
   // callback from firebase
   [types.SET_AUTH_USER](state, { user }) {
+    console.log('mutation', user)
     if (!user) {
       state.uid = null;
       state.email = null;
@@ -39,7 +40,7 @@ export const actions = {
   },
   onAuthStateChangedAction(ctx, { authUser, claims }) {
     const { commit } = ctx;
-    console.log("on auth state changed action", authUser, claims);
+    // console.log("on auth state changed action", authUser, claims);?
     if (!authUser) {
       // claims = null
       // Perform logout operations
@@ -48,6 +49,7 @@ export const actions = {
       const { uid, email } = authUser;
       // state.uid = uid;
       // state.email = email;
+      console.log('about to update user', uid, email)
       commit(types.SET_AUTH_USER, { user: { uid, email } });
       // Do something with the authUser and the claims object...
     }
