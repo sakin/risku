@@ -4,9 +4,6 @@ export const state = () => ({
   uid: null,
   name: "",
   email: "",
-  countDocument: {
-    count: null,
-  },
 });
 
 const types = {
@@ -23,7 +20,7 @@ export const mutations = {
   },
   // callback from firebase
   [types.SET_AUTH_USER](state, { user }) {
-    console.log('mutation', user)
+    // console.log('mutation', user)
     if (!user) {
       state.uid = null;
       state.email = null;
@@ -37,7 +34,7 @@ export const mutations = {
 
 export const actions = {
   async logout(ctx) {
-    console.log("logout action");
+    // console.log("logout action");
     const { commit } = ctx;
 
     await this.$fireAuth.signOut();
@@ -59,18 +56,7 @@ export const actions = {
       // Do something with the authUser and the claims object...
     }
   },
-  async increment({ commit, state, rootState, getters }) {
-    const ref = this.$fireStore.collection('countCollection').doc('countDocument')
-    const count = parseInt(getters.count, 10) || 0
-    try {
-      await ref.set({
-        count: count + 1,
-      },  {merge: true})
-    } catch (e) {
-      return Promise.reject(e)
-    }
-  },
-  
+
   bindCountDocument: firestoreAction(async function ({ bindFirestoreRef }) {
     const ref = this.$fireStore
       .collection('countCollection')
@@ -86,14 +72,6 @@ export const actions = {
 
 export const getters = {
   loggedIn(state) {
-    // console.log("logged in", state);
-    console.log('getter',state.uid)
     return !!state.uid;
   },
-  count(state) {
-    return state.countDocument.count
-  },
-  // get(state) {
-  //   return state.list;
-  // }
 };

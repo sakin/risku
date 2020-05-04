@@ -3,7 +3,8 @@
     <div class="bg-white">
       <p>count: {{count}}</p>
       <a @click.prevent="increment" href="#" class="btn btn-primary">+</a>
-      </div>
+      <a @click.prevent="decrement" href="#" class="btn btn-primary">-</a>
+    </div>
     <div class="map">
       <img src="~assets/images/westeros.jpg" />
     </div>
@@ -20,14 +21,17 @@ export default {
   async mounted() {
     // console.log(this.$fireAuth);
     try {
-      await this.$store.dispatch('user/bindCountDocument')
+      await this.$store.dispatch('count/bindCountDocument')
     } catch (e) {
       console.error(e)
     }
   },
   methods: {
     async increment() {
-      await this.$store.dispatch('user/increment', parseInt(this.count) + 1) 
+      await this.$store.dispatch('count/increment') 
+    },
+    async decrement() {
+      await this.$store.dispatch('count/decrement') 
     }
     // login() {
     //   // this.$root.emit("openLoginModal");
@@ -40,7 +44,7 @@ export default {
   },
   computed: {
     count() {
-      return this.$store.getters["user/count"];
+      return this.$store.getters["count/count"];
     }
   }
 };
