@@ -58,12 +58,11 @@ export const actions = {
   },
 
   bindCountDocument: firestoreAction(async function ({ bindFirestoreRef }) {
-    const ref = this.$fireStore
+    const countCollectionRef = this.$fireStore
       .collection('countCollection')
       .doc('countDocument')
-    const val = await ref.get();
-    console.log('reading', val);
-    await bindFirestoreRef('countDocument', ref, { wait: true })
+    
+    await bindFirestoreRef('countDocument', countCollectionRef, { wait: true })
   }),
   unbindCountDocument: firestoreAction(function ({ unbindFirestoreRef }) {
     unbindFirestoreRef('countDocument', false)
