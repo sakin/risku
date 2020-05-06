@@ -7,7 +7,7 @@
           {{ email }}
         </li>
         <li v-if="loggedIn" class="self-end ml-6">
-          <nuxt-link class="text-gray-400" to="/maps/new">Create New Map</nuxt-link>
+          <nuxt-link class="text-gray-400" to="/maps">Maps</nuxt-link>
         </li>
         <li v-if="loggedIn" class="self-end ml-6">
           <a class="text-gray-400 cursor-pointer" @click.prevent="logout"
