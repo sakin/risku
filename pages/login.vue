@@ -14,8 +14,7 @@
         <input type="submit" value="Login" class="btn btn-primary" />
       </form>
       <p class="text-center mt-2">
-      <nuxt-link to="/login" class="text-white">Sign Up</nuxt-link>
-      <a @click="logout">TEST LOGOUT</a>
+        <nuxt-link to="/signup" class="text-white">Sign Up</nuxt-link>
       </p>
     </div>
   </div>
