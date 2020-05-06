@@ -2,16 +2,22 @@
   <div>
     <div class="bg-blue-900 flex w-full py-3">
       <h1 class="text-white pl-3">Risku</h1>
-      <ul class="self-end flex ml-auto pr-3">
+      <ul class="self-end flex ml-auto pr-3" v-if="loggedIn">
         <li class="ml-6 text-gray-400" v-if="loggedIn">
           {{ email }}
+        </li>
+        <li v-if="loggedIn" class="self-end ml-6">
+          <nuxt-link class="text-gray-400" to="/maps/new">Create New Map</nuxt-link>
         </li>
         <li v-if="loggedIn" class="self-end ml-6">
           <a class="text-gray-400 cursor-pointer" @click.prevent="logout"
             >Logout</a
           >
         </li>
-        <li class="ml-6" v-else>
+        
+      </ul>
+      <ul v-else>
+        <li class="ml-6">
           <nuxt-link class="text-gray-400" to="/login">Login</nuxt-link>
         </li>
       </ul>

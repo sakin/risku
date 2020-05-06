@@ -9,14 +9,16 @@
             <li v-for="error in errors">{{ error }}</li>
           </ul>
         </p>
-        <img :src="previewImage" class="preview" />
-        <input type="file" accept="image/*" @change=onImageChange>
-        <!-- <input type="email" name="email" v-model="email" class="mb-2 p-2 rounded-sm" placeholder="Email" />
-        <input type="password" v-model="password" class="mb-2 p-2 rounded-sm" placeholder="Password" /> -->
-        <input type="submit" value="Login" class="btn btn-primary" />
+         <input type="text" name="name" v-model="name" class="mb-4 p-2 rounded-sm" placeholder="Map Name" />
+        <div class="mb-3">
+          <img :src="previewImage" class="preview mb-3" />
+          <input type="file" accept="image/*" @change=onImageChange>  
+        </div>
+        <!-- <input type="submit" v-bind:value="Create Map" class="btn btn-primary"  /> -->
+        <button type="submit" class="btn btn-primary" :disabled="submitting">{{buttonLabel}}</button>
       </form>
       <p class="text-center mt-2">
-      <nuxt-link to="/login" class="text-white">Sign Up</nuxt-link>
+        <nuxt-link to="/" class="text-white">Cancel</nuxt-link>
       </p>
     </div>
   </div>
@@ -28,10 +30,39 @@ export default {
     return{
       previewImage: null,
       mapImage: null,
+      name: "",
       errors: [],
+      submitting: false,
     }
   },
   methods: {
+    async onSubmit() {
+      this.errors = []
+      if (!this.mapImage || !this.name) {
+        this.errors.push("Please enter a name or upload a map");
+      } else {
+        try {
+          this.submitting = true;
+          const map = { name: this.name, image: this.mapImage }
+          await this.$store.dispatch('map/createMap', { map }) 
+          // console.log('after')
+
+          // todo: somehow show a toast for success!
+          this.$router.push({
+            path: '/maps'
+          })
+
+        } catch (e) {
+          this.submitting = false;
+          console.log('uh oh', e);
+          this.handleError(e);
+        }
+      }
+      
+    },
+    handleError(e) {
+       this.errors.push("Whoops something bad happened!");
+    },
     onImageChange(e) {
       this.mapImage = e.target.files[0];
       const image = e.target.files[0];
@@ -39,8 +70,13 @@ export default {
       reader.readAsDataURL(image);
       reader.onload = e => {
         this.previewImage = e.target.result;
-        console.log(this.previewImage);
+        console.log('on image load', image);
       };
+    }
+  },
+  computed: {
+    buttonLabel() {
+      return !this.submitting ? "Create Map" : "Creating..."
     }
   }
 }
