@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="min-h-screen flex-col flex">
     <div class="bg-blue-900 flex w-full py-3">
       <h1 class="text-white pl-3">Risku</h1>
       <ul class="self-end flex ml-auto pr-3" v-if="loggedIn">
@@ -14,7 +14,6 @@
             >Logout</a
           >
         </li>
-        
       </ul>
       <ul v-else>
         <li class="ml-6">

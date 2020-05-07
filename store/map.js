@@ -8,7 +8,7 @@ export const state = () => ({
     points: []
   },
   uploadingProgress: null,
-  maps: [],
+  maps: []
 });
 
 const types = {
@@ -20,7 +20,7 @@ const types = {
 };
 
 export const mutations = {
-  [types.CREATE_MAP](state, {map}) {
+  [types.CREATE_MAP](state, { map }) {
     state.id = map.id;
     state.name = map.name;
     state.image = map.image;
@@ -28,7 +28,7 @@ export const mutations = {
   [types.SET_MAPS](state, maps) {
     state.maps = maps;
   },
-  [types.SET_MAP](state, {map}) {
+  [types.SET_MAP](state, { map }) {
     state.currentMap = map;
   },
   [types.SET_UPLOAD_PROGRESS](state, progress) {
@@ -42,54 +42,67 @@ export const mutations = {
 };
 
 export const actions = {
-  createMap(ctx, {map}) {
+  createMap(ctx, { map }) {
     const { commit } = ctx;
-    commit(types.CREATE_MAP, {map});
+    commit(types.CREATE_MAP, { map });
   },
 
-  async getMap(ctx, {id}){
+  async getMap(ctx, { id }) {
     const { commit } = ctx;
-    const mapRef = this.$fireStore
-      .collection('mapCollection')
-      .doc('id')
+    const mapRef = this.$fireStore.collection("mapCollection").doc("id");
     const map = await mapRef.get();
-    commit(types.SET_MAP, map)
+    commit(types.SET_MAP, map);
   },
 
-  async uploadImage(ctx, {imageFile, fileName}) {
+  async uploadImage(ctx, { imageFile, fileName }) {
     const { commit, dispatch } = ctx;
-    
-    var storageRef = this.$fireStorage.ref()
-    const snapshot = await storageRef.child(`images/${fileName}`).put(imageFile);
+
+    var storageRef = this.$fireStorage.ref();
+    const snapshot = await storageRef
+      .child(`images/${fileName}`)
+      .put(imageFile);
     return snapshot.ref.getDownloadURL();
   },
 
-  async createMap(ctx, {map}) {
-    const {commit, dispatch} = ctx;
-    const fileName = getFileName({name: map.name, fileName: map.image.name});
-    const imageUrl = await dispatch('uploadImage', {imageFile: map.image, fileName});
+  async createMap(ctx, { map }) {
+    const { commit, dispatch } = ctx;
+    const fileName = getFileName({ name: map.name, fileName: map.image.name });
+    const imageUrl = await dispatch("uploadImage", {
+      imageFile: map.image,
+      fileName
+    });
     const slug = strToSlug(map.name);
     const id = `${slug}-${dateTimeStamp()}`;
-    const newMapRef = this.$fireStore.collection('mapsCollection').doc(id)
+    const newMapRef = this.$fireStore.collection("mapsCollection").doc(id);
 
-    await newMapRef.set({
-      id,
-      slug,
-      name: map.name,
-      mapUrl: imageUrl
-    }, {merge: true});
+    await newMapRef.set(
+      {
+        id,
+        slug,
+        name: map.name,
+        mapUrl: imageUrl
+      },
+      { merge: true }
+    );
   },
 
   async getAllMaps(ctx) {
-    const {commit} = ctx;
-    const mapsRef = this.$fireStore.collection('mapsCollection')
+    const { commit } = ctx;
+    const mapsRef = this.$fireStore.collection("mapsCollection");
     const mapQuerySnapshot = await mapsRef.get();
-    let maps = []
+    let maps = [];
     await mapQuerySnapshot.forEach(function(doc) {
       const map = doc.data();
       maps.push(map);
     });
     commit(types.SET_MAPS, maps);
+  },
+  async getMap(ctx, id) {
+    const { commit } = ctx;
+    console.log("id", id);
+    const mapsRef = this.$fireStore.collection("mapsCollection").doc(id);
+    const mapDoc = await mapsRef.get();
+    return mapDoc.data();
   }
 
   // bindCountDocument: firestoreAction(async function ({ bindFirestoreRef }) {
@@ -105,19 +118,17 @@ export const actions = {
   // }),
 };
 
-export const getters = {
-
-};
+export const getters = {};
 
 // helpers
-const getFileName = ({name, fileName}) => {
-  return `${name}-${dateTimeStamp()}-${fileName}`
-}
+const getFileName = ({ name, fileName }) => {
+  return `${name}-${dateTimeStamp()}-${fileName}`;
+};
 
 const dateTimeStamp = () => {
   const now = new Date();
-  return `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`
-}
+  return `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`;
+};
 
 function strToSlug(str) {
   str = str.replace(/^\s+|\s+$/g, ""); // trim
