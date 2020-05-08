@@ -42,17 +42,17 @@ export const mutations = {
 };
 
 export const actions = {
-  createMap(ctx, { map }) {
-    const { commit } = ctx;
-    commit(types.CREATE_MAP, { map });
-  },
+  // createMap(ctx, { map }) {
+  //   const { commit } = ctx;
+  //   commit(types.CREATE_MAP, { map });
+  // },
 
-  async getMap(ctx, { id }) {
-    const { commit } = ctx;
-    const mapRef = this.$fireStore.collection("mapCollection").doc("id");
-    const map = await mapRef.get();
-    commit(types.SET_MAP, map);
-  },
+  // async getMap(ctx, { id }) {
+  //   const { commit } = ctx;
+  //   const mapRef = this.$fireStore.collection("mapCollection").doc("id");
+  //   const map = await mapRef.get();
+  //   commit(types.SET_MAP, map);
+  // },
 
   async uploadImage(ctx, { imageFile, fileName }) {
     const { commit, dispatch } = ctx;
@@ -86,6 +86,23 @@ export const actions = {
     );
   },
 
+  async updateMap(ctx, {map}){
+    const { commit, dispatch } = ctx;
+    const {id, slug, name, imageHeight, imageWidth} = map;
+    const newMapRef = this.$fireStore.collection("mapsCollection").doc(id);
+
+    await newMapRef.set(
+      {
+        id,
+        slug,
+        name,
+        imageHeight,
+        imageWidth
+      },
+      { merge: true }
+    );
+  },
+
   async getAllMaps(ctx) {
     const { commit } = ctx;
     const mapsRef = this.$fireStore.collection("mapsCollection");
@@ -99,7 +116,6 @@ export const actions = {
   },
   async getMap(ctx, id) {
     const { commit } = ctx;
-    console.log("id", id);
     const mapsRef = this.$fireStore.collection("mapsCollection").doc(id);
     const mapDoc = await mapsRef.get();
     return mapDoc.data();
