@@ -100,7 +100,7 @@ export default {
     
   computed: {
     gridClass() {
-      return `grid grid-cols-${this.numCols} h-full`;
+      return `grid h-full`;
     },
     currentMap() {
       return this.$store.state.map.currentMap;
