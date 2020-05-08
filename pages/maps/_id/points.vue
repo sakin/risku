@@ -99,15 +99,14 @@ export default {
   },
     
   computed: {
-    gridClass() {
-      return `grid h-full`;
-    },
     currentMap() {
       return this.$store.state.map.currentMap;
     },
     gridStyle() {
       return {
-        gridTemplateColumns: `repeat(${this.numCols},minmax(0,1fr)) !important;display:grid;height:100%;`,
+        gridTemplateColumns: `repeat(${this.numCols},minmax(0,1fr))`,
+        display:"grid", 
+        height: "100%",
       }
     },
     totalPoints() {
