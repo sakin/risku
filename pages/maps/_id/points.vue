@@ -22,7 +22,7 @@
         </div>
       <div class="relative">
         <div class="absolute inset-0">
-          <div :class="gridClass" :style="gridStyle">
+          <div class="grid h-full" :style="gridStyle">
             <div v-for="index in totalPoints" :key="index" class="border-white border-solid border flex flex-col">
               <a href="#" class='text-white hover:bg-blue-500 hover:opacity-50 flex-1 justify-center items-center flex'>1</a>
             </div>
@@ -107,7 +107,7 @@ export default {
     },
     gridStyle() {
       return {
-        gridTemplateColumns: `repeat(${this.numCols},minmax(0,1fr)) !important`,
+        gridTemplateColumns: `repeat(${this.numCols},minmax(0,1fr)) !important;display:grid;height:100%;`,
       }
     },
     totalPoints() {
