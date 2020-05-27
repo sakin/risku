@@ -118,6 +118,7 @@ export const actions = {
     const { commit } = ctx;
     const mapsRef = this.$fireStore.collection("mapsCollection").doc(id);
     const mapDoc = await mapsRef.get();
+    // commit(types.SET_MAP, mapDoc.data())
     return mapDoc.data();
   }
 
