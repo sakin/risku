@@ -117,6 +117,12 @@ export default {
   },
     
   computed: {
+    mapRatio() {
+      return {
+        width: this.originalMapSize.width / this.mapSize.width, 
+        height: this.originalMapSize.height / this.mapSize.height
+      }
+    },
     currentMap() {
       return this.$store.state.map.currentMap;
     },
