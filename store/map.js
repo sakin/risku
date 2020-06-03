@@ -4,15 +4,16 @@ export const state = () => ({
   currentMap: {
     id: null,
     name: null,
-    image: null,
-    points: []
+    image: null
   },
   uploadingProgress: null,
-  maps: []
+  maps: [],
+  points: []
 });
 
 const types = {
   CREATE_MAP: "CREATE_MAP",
+  SET_POINTS: "SET_POINTS",
   SET_MAPS: "SET_MAPS",
   SET_MAP: "SET_MAP",
   SET_UPLOAD_PROGRESS: "SET_UPLOAD_PROGRESS",
@@ -24,6 +25,9 @@ export const mutations = {
     state.id = map.id;
     state.name = map.name;
     state.image = map.image;
+  },
+  [types.SET_POINTS](state, points) {
+    state.points = points;
   },
   [types.SET_MAPS](state, maps) {
     state.maps = maps;
@@ -49,7 +53,7 @@ export const actions = {
 
   // async getMap(ctx, { id }) {
   //   const { commit } = ctx;
-  //   const mapRef = this.$fireStore.collection("mapCollection").doc("id");
+  //   const mapRef = this.$fireStore.collection("testMapsCollection").doc("id");
   //   const map = await mapRef.get();
   //   commit(types.SET_MAP, map);
   // },
@@ -73,7 +77,7 @@ export const actions = {
     });
     const slug = strToSlug(map.name);
     const id = `${slug}-${dateTimeStamp()}`;
-    const newMapRef = this.$fireStore.collection("mapsCollection").doc(id);
+    const newMapRef = this.$fireStore.collection("testMapsCollection").doc(id);
 
     await newMapRef.set(
       {
@@ -89,7 +93,7 @@ export const actions = {
   async updateMap(ctx, {map}){
     const { commit, dispatch } = ctx;
     const {id, slug, name, imageHeight, imageWidth} = map;
-    const newMapRef = this.$fireStore.collection("mapsCollection").doc(id);
+    const newMapRef = this.$fireStore.collection("testMapsCollection").doc(id);
 
     await newMapRef.set(
       {
@@ -103,20 +107,35 @@ export const actions = {
     );
   },
 
+  async getAllPoints(ctx) {
+    const { commit } = ctx;
+    const pointsRef = this.$fireStore.collection("testMapsCollection").doc("world-extended-2020-5-6");
+    const pointsQuerySnapshot = await pointsRef.get();
+    let points = [];
+    // await pointsQuerySnapshot.forEach(function(doc) {
+      const point = await pointsQuerySnapshot.data();
+      console.log('TEST POINTS:', point)
+      points.push(point);
+    //});
+    console.log('POINTS:', points)
+    commit(types.SET_POINTS, points);
+  },
+
   async getAllMaps(ctx) {
     const { commit } = ctx;
-    const mapsRef = this.$fireStore.collection("mapsCollection");
+    const mapsRef = this.$fireStore.collection("testMapsCollection");
     const mapQuerySnapshot = await mapsRef.get();
     let maps = [];
     await mapQuerySnapshot.forEach(function(doc) {
       const map = doc.data();
       maps.push(map);
     });
+    console.log('MAPS:', maps)
     commit(types.SET_MAPS, maps);
   },
   async getMap(ctx, id) {
     const { commit } = ctx;
-    const mapsRef = this.$fireStore.collection("mapsCollection").doc(id);
+    const mapsRef = this.$fireStore.collection("testMapsCollection").doc(id);
     const mapDoc = await mapsRef.get();
     // commit(types.SET_MAP, mapDoc.data())
     return mapDoc.data();
@@ -124,7 +143,7 @@ export const actions = {
 
   // bindCountDocument: firestoreAction(async function ({ bindFirestoreRef }) {
   //   const ref = this.$fireStore
-  //     .collection('mapCollection')
+  //     .collection('testMapsCollection')
   //     .doc('countDocument')
   //   const val = await ref.get();
   //   console.log('reading', val);
@@ -167,4 +186,17 @@ function strToSlug(str) {
     .replace(/-+$/, ""); // trim - from end of text
 
   return str;
+}
+
+function firebaseTest() {
+  const myMaps = this.$fireStore.collection('testMapsCollection').doc('world-extended-2020-5-6');
+
+  myMaps.get()
+      .then(result => {
+          const data = doc.data();
+          document.write(doc.title + '<br>');
+          document.write(doc.mapURL);
+          console.log(doc)
+      }) 
+      .catch(console.log)
 }
