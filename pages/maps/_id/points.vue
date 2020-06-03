@@ -4,15 +4,14 @@
       {{originalMapSize.width}} x {{originalMapSize.height}}
       <br/>
       {{mapSize.width}} x {{mapSize.height}}
-      <div class="relative">
-        <div v-for="point in mapPoints2" :key="point.id" class="border-white border-solid border flex flex-col">
-          <a href="#" v-bind:style="{ left: `${point.x}px`, top: `${point.y}px` }" class='point'>
-            {{point.id}}: {{point.currrentX}} x {{point.currentY}}
-          </a>
-        </div>
+
+      <!-- <div class="relative">
+        <a  v-for="point in mapPoints2" :key="point.id" href="#" v-bind:style="{ left: `${point.x}px`, top: `${point.y}px` }" class='point'>
+          
+        </a>
         <img :src="map.mapUrl" class="" @click="onMapClick" ref="mapImage" />
-      </div>
-      
+      </div> -->
+      <Map v-bind:map="map" @map-clicked="onMapClick" />
       <p class="text-center mt-2">
         <nuxt-link to="/maps" class="text-white">Back to maps</nuxt-link>
       </p>
@@ -21,7 +20,11 @@
 </template>
 
 <script>
+import Map from "~/components/Map.vue";
 export default {
+  components: {
+    Map
+  },
   data(things) {
     console.log(things)
     const {map} = things;
@@ -75,22 +78,8 @@ export default {
       }
       img.src = this.map.mapUrl;
     },
-    onMapClick(e) {
-      // debugger;
-      const xPosition = e.clientX;
-      const yPosition = e.clientY;
-      // const xPosition = e.pageX;
-      // const yPosition = e.pageY;
-      const renderedMap = this.$refs.mapImage.getClientRects();
-      const renderedMap2 = this.$refs.mapImage.getBoundingClientRect();
-      this.mapSize = { width: renderedMap2.width, height: renderedMap2.height}
-      var x = xPosition - renderedMap2.left; //x position within the element.
-      var y = yPosition - renderedMap2.top;  //y position within the element.
-      
-      console.log('small position', x, y, 'original position', this.mapRatio.width * x, this.mapRatio.height * y)
+    onMapClick([x, y]) {
       this.addPoint(x, y);
-      // console.log('mouse position', e, xPosition, yPosition, renderedMap[0].height, renderedMap[0].width);
-      // console.log('image widths', );
     },
     addPoint(x, y) {
       const originalXPosition = this.mapRatio.width * x;
@@ -137,25 +126,6 @@ export default {
     currentMap() {
       return this.$store.state.map.currentMap;
     },
-    mapPoints2() {
-      
-      const points = this.map.points.map((point) => {
-        return {
-          ...point,
-          currentX: point.x  /this.mapRatio.width ,
-          currentY: point.y / this.mapRatio.height
-        }
-      });
-      console.log('points', points);
-      return points;
-    },
-    gridStyle() {
-      return {
-        gridTemplateColumns: `repeat(${this.numCols},minmax(0,1fr))`,
-        display:"grid", 
-        height: "100%",
-      }
-    },
     totalPoints() {
       return this.numCols * this.numRows
     }
@@ -166,11 +136,5 @@ export default {
 <style lang="postcss" scoped>
 .point-container{ 
   border: 1px solid white;
-}
-.point {
-  @apply absolute text-white flex-1 justify-center items-center flex;
-  &:hover {
-    @apply bg-blue-500 opacity-50;
-  }
 }
 </style>
